@@ -1,0 +1,36 @@
+import sat.
+
+% 8x8   => 5.2s
+% 12x12 => 
+main =>
+  N = 10,
+  G = new_array(N,N),
+  Moves = new_array(N*N),
+  Moves[1] = {1,1}, % start position: top left
+
+  Moves_flat = new_array(N*N),
+  Moves_flat :: 0..N*N-1,
+  Moves_flat[1] = 0, % start position: top left
+
+  foreach (I in 2..N*N)
+    [X,X2,Y,Y2] :: 1..N,
+    (Y-1)*N  + X-1  #= Moves_flat[I-1],
+    (Y2-1)*N + X2-1 #= Moves_flat[I],
+    valid_move({X,Y}, {X2,Y2}),
+    Moves[I] = {X2,Y2},
+  end,
+  valid_move(Moves[1], Moves[N*N]), % end position should be one knight's move away from start position
+
+  all_different(Moves_flat),
+  solve([], [Moves_flat,Moves]),
+  [X,Y] :: 1..N,
+  (Y-1)*N + X-1 #= Moves_flat[2],
+  solve([], [X,Y]),
+  println(xy={X,Y}),
+  println(Moves),
+  Moves.remove_dups.len = N*N.
+
+valid_move({X,Y}, {X2,Y2}) =>
+    X_diff #= abs(X2 - X),
+    Y_diff #= abs(Y2 - Y),
+    (X_diff #= 1 #/\ Y_diff #= 2) #\/ (X_diff #= 2 #/\ Y_diff #= 1).

@@ -5,7 +5,6 @@ import sat.
 % 12x12 => 2m51s
 main =>
   N = 14,
-  G = new_array(N,N),
   Moves = new_array(N*N),
   Moves[1] = {1,1}, % start position: top left
   Moves_flat = new_array(N*N),
